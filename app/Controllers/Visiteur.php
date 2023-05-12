@@ -130,11 +130,15 @@ class Visiteur extends BaseController{
         /* INSERTION PRODUIT SAISI DANS BDD */
 
         $donneesAInserer = array(
-            'reference' => $this->request->getPost('txtReference'),
-            'libelle' => $this->request->getPost('txtLibelle'),
-            'prixht' => $this->request->getPost('txtPrixHT'),
-            'quantiteenstock' => $this->request->getPost('txtQuantiteEnStock'),
-            'image' => $this->request->getPost('txtNomFichierImage'),
+            'NOM' => $this->request->getPost('txtNOM'),
+            'PRENOM' => $this->request->getPost('txtPRENOM'),
+            'ADRESSE' => $this->request->getPost('txtADRESSE'),
+            'CODEPOSTAL' => $this->request->getPost('txtCODEPOSTAL'),
+            'VILLE' => $this->request->getPost('txtVILLE'),
+            'TELEPHONEFIXE' => $this->request->getPost('txtTELEPHONEFIXE'),
+            'TELEPHONEMOBILE' => $this->request->getPost('txtTELEPHONEMOBILE'),
+            'MEL' => $this->request->getPost('txtMEL'),
+            'MOTDEPASSE' => $this->request->getPost('txtMOTDEPASSE'),
         ); // reference, libelle, prixht, quantiteenstock, image : champs de la table 'produit'
 
         $modClient = new ModeleClient(); //instanciation du modèle
