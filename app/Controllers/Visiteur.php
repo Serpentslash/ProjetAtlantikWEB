@@ -253,4 +253,15 @@ class Visiteur extends BaseController{
             . view('Visiteur/vue_AfficherLiaisons')
             . view('Templates/vue_Footer');
     }
+
+    public function afficherTarifs()
+    {
+        $modTarif = new ModeleTarifs();
+        $data['tarifs'] = $modTarif->getTarifs();
+        $data['TitreDeLaPage'] = "Liste des tarifs";
+
+        return view('Templates/vue_Header', $data)
+            . view('Visiteur/vue_AfficherTarifs')
+            . view('Templates/vue_Footer');
+    }
 }

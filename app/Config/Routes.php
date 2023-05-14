@@ -36,6 +36,7 @@ $routes->match(['get', 'post'], 'inscrire', 'Visiteur::inscrire');
 $routes->match(['get', 'post'], 'profil', 'Client::profil');
 $routes->get('deconnecter', 'Visiteur::deconnecter');
 $routes->get('afficher_liaisons', 'Visiteur::afficherLiaisons');
+$routes->get('afficher_tarifs', 'Visiteur::afficherTarifs');
 
 /*
  * --------------------------------------------------------------------

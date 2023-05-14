@@ -21,7 +21,7 @@ class ModeleClient extends Model
 
     public function modifierClient($Mel, $donnees)
     {
-        $champsRemplis = array_filter($donnees, 'strlen'); // on récupère les champs remplis
-        $this->where('Mel', $Mel)->set($champsRemplis)->update(); // on met à jour les champs remplis pour le client avec l'id correspondant
+        $champsRemplis = array_filter($donnees, 'strlen');
+        $this->where('Mel', $Mel)->set($champsRemplis)->update();
     }
 }
