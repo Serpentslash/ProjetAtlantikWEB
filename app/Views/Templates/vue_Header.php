@@ -10,16 +10,16 @@
 <body>
     <div class="titre"><h1>Atlantik</h1></div>
     <nav>
-        <a href="accueil">Accueil</a>
-        <a href="afficher_liaison">Les liaisons</a>
+        <a href="<?php echo site_url('accueil'); ?>">Accueil</a>
+        <a href="<?php echo site_url('afficher_liaisons'); ?>">Les liaisons</a>
         <a href="">Horaires/Réservation</a>
         <?php
             $session = session();
             if(!is_null($session->get('Mel'))){
-                echo '<a href="profil">Profil</a>';
-                echo '<a href="deconnecter">Se deconnecter</a>';
+                echo '<a href="'.site_url('profil').'">Profil</a>';
+                echo '<a href="'.site_url('deconnecter'),'">Se deconnecter</a>';
             }else{
-                echo '<a href="connecter">Se connecter</a>';
+                echo '<a href="'.site_url('connecter'),'">Se connecter</a>';
             }
         ?>
     </nav>

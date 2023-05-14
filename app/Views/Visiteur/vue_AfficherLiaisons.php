@@ -27,7 +27,7 @@
                     echo "$secteur";
                     $last_secteur = $secteur;
                 }
-                echo "</td><td><a href=\"#$noliaison\">$noliaison</a></td>";
+                echo "</td><td><a href=".site_url('afficher_tarifs')."?noliaison=$noliaison>$noliaison</a></td>";
                 echo "<td>$distance</td>";
                 echo "<td>$port_depart</td>";
                 echo "<td>$port_arrivee</td>";
@@ -35,4 +35,4 @@
             }
             ?>
         </tbody>
-    </table>
+    </table>site_url('accueil')

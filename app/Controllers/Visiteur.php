@@ -32,7 +32,7 @@ class Visiteur extends BaseController{
         /* VALIDATION DU FORMULAIRE */
         $reglesValidation = [ // Régles de validation
             'txtMel' => 'required',
-            'txtPassword' => 'required',
+            'txtMotDePasse' => 'required',
         ];
 
         if (!$this->validate($reglesValidation)) {
@@ -46,17 +46,19 @@ class Visiteur extends BaseController{
         /* SI FORMULAIRE NON VALIDE, LE CODE QUI SUIT N'EST PAS EXECUTE */
         /* RECHERCHE UTILISATEUR DANS BDD */
         $Mel = $this->request->getPost('txtMel');
-        $password = $this->request->getPost('txtPassword');
+        $MotDePasse = $this->request->getPost('txtMotDePasse');
 
         /* on va chercher dans la BDD l'utilisateur correspondant aux id et mot de passe saisis */
         $modClient = new ModeleClient();
-        $clientRetourne = $modClient->retournerClient($Mel, $password);
+        $clientRetourne = $modClient->retournerClient($Mel, $MotDePasse);
 
         if ($clientRetourne != null) {
             /* identifiant et mot de passe OK : identifiant et profil sont stockés en session */
-            $colonnes = ['Nom', 'Prenom', 'Adresse','CodePostal', 'Ville', 'TelephoneFixe', 'TelephoneMobile', 'Mel', 'MotDePasse'];
-            foreach ($colonnes as $colonne) {
-                $session->set($colonne, $clientRetourne[$colonne]);
+            $colonnesMAJ = ['NOM', 'PRENOM', 'ADRESSE','CODEPOSTAL', 'VILLE', 'TELEPHONEFIXE', 'TELEPHONEMOBILE', 'MEL', 'MOTDEPASSE'];
+            $colonnesMIN = ['Nom', 'Prenom', 'Adresse','CodePostal', 'Ville', 'TelephoneFixe', 'TelephoneMobile', 'Mel', 'MotDePasse'];
+
+            for($i = 0; $i <= 8; $i++) {
+                $session->set($colonnesMIN[$i], $clientRetourne[$colonnesMAJ[$i]]);
             }
 
             $data['Mel'] = $Mel;
@@ -73,6 +75,7 @@ class Visiteur extends BaseController{
 
     public function deconnecter()
     {
+        $session = session();
         if(!is_null($session->get('Mel'))){
             session()->destroy();
             return redirect()->to('accueil');
@@ -167,7 +170,7 @@ class Visiteur extends BaseController{
                     'valid_email' => 'Le champ {field} doit être une adresse email valide.'
                 ]
             ],
-            'txtPassword' => [
+            'txtMotDePasse' => [
                 'label' => 'Mot de passe',
                 'rules' => 'required|min_length[8]',
                 'errors' => [
