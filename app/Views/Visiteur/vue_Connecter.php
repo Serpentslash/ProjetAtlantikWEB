@@ -2,11 +2,11 @@
     echo form_open('connecter');
     echo csrf_field();
 
-    echo form_label('Entrez votre mail ','txtMail');
-    echo form_input('txtMail', set_value('txtMail'));
+    echo form_label('Entrez votre mail ','txtMel');
+    echo form_input('txtMel', set_value('txtMel'));
 
-    echo form_label('Entrez votre mot de passe ','txtPassword');
-    echo form_password('txtPassword', set_value('txtPassword'));
+    echo form_label('Entrez votre mot de passe ','txtMotDePasse');
+    echo form_password('txtMotDePasse', set_value('txtMotDePasse'));
 
     echo form_submit('btnConnecter','Se connecter');
     echo form_close();

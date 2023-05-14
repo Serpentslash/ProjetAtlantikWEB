@@ -11,12 +11,12 @@
     <div class="titre"><h1>Atlantik</h1></div>
     <nav>
         <a href="accueil">Accueil</a>
-        <a href="">Les liaisons</a>
+        <a href="afficher_liaison">Les liaisons</a>
         <a href="">Horaires/Réservation</a>
         <?php
             $session = session();
-            if(!is_null($session->get('MEL'))){
-                echo '<a href="connecter">Profil</a>';
+            if(!is_null($session->get('Mel'))){
+                echo '<a href="profil">Profil</a>';
                 echo '<a href="deconnecter">Se deconnecter</a>';
             }else{
                 echo '<a href="connecter">Se connecter</a>';

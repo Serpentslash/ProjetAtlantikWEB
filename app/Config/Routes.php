@@ -32,8 +32,10 @@ $routes->set404Override();
 $routes->get('/', 'Home::index');
 $routes->get('accueil', 'Visiteur::accueil');
 $routes->match(['get', 'post'], 'connecter', 'Visiteur::connecter');
-$routes->get('inscrire', 'Visiteur::inscrire');
+$routes->match(['get', 'post'], 'inscrire', 'Visiteur::inscrire');
+$routes->match(['get', 'post'], 'profil', 'Client::profil');
 $routes->get('deconnecter', 'Visiteur::deconnecter');
+$routes->get('afficher_liaisons', 'Visiteur::afficherLiaisons');
 
 /*
  * --------------------------------------------------------------------

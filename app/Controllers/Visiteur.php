@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 use App\Models\ModeleClient;
+use App\Models\ModeleLiaison;
 
 helper(['url', 'assets', 'form']);
 
@@ -30,7 +31,7 @@ class Visiteur extends BaseController{
 
         /* VALIDATION DU FORMULAIRE */
         $reglesValidation = [ // Régles de validation
-            'txtMail' => 'required',
+            'txtMel' => 'required',
             'txtPassword' => 'required',
         ];
 
@@ -44,18 +45,21 @@ class Visiteur extends BaseController{
 
         /* SI FORMULAIRE NON VALIDE, LE CODE QUI SUIT N'EST PAS EXECUTE */
         /* RECHERCHE UTILISATEUR DANS BDD */
-        $MEL = $this->request->getPost('txtMail');
+        $Mel = $this->request->getPost('txtMel');
         $password = $this->request->getPost('txtPassword');
 
         /* on va chercher dans la BDD l'utilisateur correspondant aux id et mot de passe saisis */
-        $modClient = new ModeleClient(); // instanciation modèle
-        $clientRetourne = $modClient->retournerClient($MEL, $password);
+        $modClient = new ModeleClient();
+        $clientRetourne = $modClient->retournerClient($Mel, $password);
 
         if ($clientRetourne != null) {
             /* identifiant et mot de passe OK : identifiant et profil sont stockés en session */
-            $session->set('MEL', $clientRetourne["MEL"]);
-            // profil = "SuperAdministrateur ou "Administrateur"
-            $data['MEL'] = $MEL;
+            $colonnes = ['Nom', 'Prenom', 'Adresse','CodePostal', 'Ville', 'TelephoneFixe', 'TelephoneMobile', 'Mel', 'MotDePasse'];
+            foreach ($colonnes as $colonne) {
+                $session->set($colonne, $clientRetourne[$colonne]);
+            }
+
+            $data['Mel'] = $Mel;
             $data['TitreDeLaPage'] = "Accueil";
             return redirect()->route('accueil');
         } else {
@@ -69,12 +73,19 @@ class Visiteur extends BaseController{
 
     public function deconnecter()
     {
-        session()->destroy();
-        return redirect()->to('accueil');
+        if(!is_null($session->get('Mel'))){
+            session()->destroy();
+            return redirect()->to('accueil');
+        }else{
+            return redirect()->route('accueil');
+        }
     }
 
     public function inscrire()
     {
+        helper(['form']);
+        $session = session();
+
         $data['TitreDeLaPage'] = 'S\'inscrire';
 
         if (!$this->request->is('post')) {
@@ -88,7 +99,7 @@ class Visiteur extends BaseController{
         /* VALIDATION DU FORMULAIRE */
 
         $reglesValidation = [
-            'NOM' => [
+            'txtNom' => [
                 'label' => 'Nom',
                 'rules' => 'required|string|max_length[50]',
                 'errors' => [
@@ -97,7 +108,7 @@ class Visiteur extends BaseController{
                     'max_length' => 'Le champ {field} ne doit pas dépasser {param} caractères.'
                 ]
             ],
-            'PRENOM' => [
+            'txtPrenom' => [
                 'label' => 'Prénom',
                 'rules' => 'required|string|max_length[50]',
                 'errors' => [
@@ -106,7 +117,7 @@ class Visiteur extends BaseController{
                     'max_length' => 'Le champ {field} ne doit pas dépasser {param} caractères.'
                 ]
             ],
-            'ADRESSE' => [
+            'txtAdresse' => [
                 'label' => 'Adresse',
                 'rules' => 'required|string|max_length[255]',
                 'errors' => [
@@ -115,7 +126,7 @@ class Visiteur extends BaseController{
                     'max_length' => 'Le champ {field} ne doit pas dépasser {param} caractères.'
                 ]
             ],
-            'CODEPOSTAL' => [
+            'txtCodePostal' => [
                 'label' => 'Code Postal',
                 'rules' => 'required|exact_length[5]|integer',
                 'errors' => [
@@ -124,7 +135,7 @@ class Visiteur extends BaseController{
                     'integer' => 'Le champ {field} doit être un entier.'
                 ]
             ],
-            'VILLE' => [
+            'txtVille' => [
                 'label' => 'Ville',
                 'rules' => 'required|string|max_length[50]',
                 'errors' => [
@@ -133,14 +144,14 @@ class Visiteur extends BaseController{
                     'max_length' => 'Le champ {field} ne doit pas dépasser {param} caractères.'
                 ]
             ],
-            'TELEPHONEFIXE' => [
+            'txtTelephoneFixe' => [
                 'label' => 'Téléphone Fixe',
                 'rules' => 'permit_empty|regex_match[/(0|\+33)[1-9]( *[0-9]{2}){4}/]',
                 'errors' => [
                     'regex_match' => 'Le champ {field} doit être un numéro de téléphone fixe valide en France (exemple : 01 23 45 67 89).'
                 ]
             ],
-            'TELEPHONEMOBILE' => [
+            'txtTelephoneMobile' => [
                 'label' => 'Téléphone Mobile',
                 'rules' => 'required|regex_match[/(0|\+33)[67]( *[0-9]{2}){4}/]',
                 'errors' => [
@@ -148,27 +159,27 @@ class Visiteur extends BaseController{
                     'regex_match' => 'Le champ {field} doit être un numéro de téléphone mobile valide en France (exemple : 06 12345678).'
                 ]
             ],
-            'MEL' => [
-            'label' => 'Adresse email',
-            'rules' => 'required|valid_email',
-            'errors' => [
-            'required' => 'Le champ {field} est obligatoire.',
-            'valid_email' => 'Le champ {field} doit être une adresse email valide.'
+            'txtMel' => [
+                'label' => 'Adresse email',
+                'rules' => 'required|valid_email',
+                'errors' => [
+                    'required' => 'Le champ {field} est obligatoire.',
+                    'valid_email' => 'Le champ {field} doit être une adresse email valide.'
                 ]
             ],
-            'MOTDEPASSE' => [
-            'label' => 'Mot de passe',
-            'rules' => 'required|min_length[8]',
-            'errors' => [
-            'required' => 'Le champ {field} est obligatoire.',
-            'min_length' => 'Le champ {field} doit contenir au moins {param} caractères.'
+            'txtPassword' => [
+                'label' => 'Mot de passe',
+                'rules' => 'required|min_length[8]',
+                'errors' => [
+                    'required' => 'Le champ {field} est obligatoire.',
+                    'min_length' => 'Le champ {field} doit contenir au moins {param} caractères.'
                 ]
             ]
         ];
 
         if (!$this->validate($reglesValidation)) {
             /* formulaire non validé, on renvoie le formulaire */
-            $data['TitreDeLaPage'] = "S'inscrire";
+            $data['TitreDeLaPage'] = "S'erreur";
 
             return view('Templates/vue_Header', $data)
             . view('Visiteur/vue_Inscrire')
@@ -179,28 +190,64 @@ class Visiteur extends BaseController{
 
         /* INSERTION PRODUIT SAISI DANS BDD */
 
-        $donneesAInserer = array(
-            'NOM' => $this->request->getPost('txtNOM'),
-            'PRENOM' => $this->request->getPost('txtPRENOM'),
-            'ADRESSE' => $this->request->getPost('txtADRESSE'),
-            'CODEPOSTAL' => $this->request->getPost('txtCODEPOSTAL'),
-            'VILLE' => $this->request->getPost('txtVILLE'),
-            'TELEPHONEFIXE' => $this->request->getPost('txtTELEPHONEFIXE'),
-            'TELEPHONEMOBILE' => $this->request->getPost('txtTELEPHONEMOBILE'),
-            'MEL' => $this->request->getPost('txtMEL'),
-            'MOTDEPASSE' => $this->request->getPost('txtMOTDEPASSE'),
-        ); // reference, libelle, prixht, quantiteenstock, image : champs de la table 'produit'
+        $Mel = $this->request->getPost('txtMel');
 
-        $modClient = new ModeleClient(); //instanciation du modèle
-        $donnees['produitAjoute'] = $modClient->insert($donneesAInserer, false);
+        $modClient = new ModeleClient();
+        $melRetourne = $modClient->retournerMel($Mel);
 
-        // provoque insert into sur la table mappée (produit, ici), retourne 1 (true) si ajout OK
+        if ($melRetourne != null) {
+            //Erreur mail déjà utilise
+            $data['TitreDeLaPage'] = "S'erreur";
 
-        return view('Templates/Header')
+            return view('Templates/vue_Header', $data)
+            . view('Visiteur/vue_Inscrire')
+            . view('Templates/vue_Footer');
 
-            .view('Administrateur/vue_RapportAjouterProduit', $donnees)
+        } else {
+            //Mail non utilise
+            $telephoneFixe = $this->request->getPost('txtTelephoneFixe');
+            $telephoneFixe = substr_replace($telephoneFixe, '.', 2, 0);
+            $telephoneFixe = substr_replace($telephoneFixe, '.', 5, 0);
+            $telephoneFixe = substr_replace($telephoneFixe, '.', 8, 0);
+            $telephoneFixe = substr_replace($telephoneFixe, '.', 11, 0);
 
-            .view('Templates/Footer');
+            $telephoneMobile = $this->request->getPost('txtTelephoneMobile');
+            $telephoneMobile = substr_replace($telephoneMobile, '.', 2, 0);
+            $telephoneMobile = substr_replace($telephoneMobile, '.', 5, 0);
+            $telephoneMobile = substr_replace($telephoneMobile, '.', 8, 0);
+            $telephoneMobile = substr_replace($telephoneMobile, '.', 11, 0);
+            
+            $donneesAInserer = array(
+                'Nom' => $this->request->getPost('txtNom'),
+                'Prenom' => $this->request->getPost('txtPrenom'),
+                'Adresse' => $this->request->getPost('txtAdresse'),
+                'CodePostal' => $this->request->getPost('txtCodePostal'),
+                'Ville' => $this->request->getPost('txtVille'),
+                'TelephoneFixe' => $telephoneFixe,
+                'TelephoneMobile' => $telephoneMobile,
+                'Mel' => $this->request->getPost('txtMel'),
+                'MotDePasse' => $this->request->getPost('txtMotDePasse'),
+            );
 
-    } // ajouterProduit
+            $donnees['nouveauClient'] = $modClient->insert($donneesAInserer, false);
+            
+            $colonnes = ['Nom', 'Prenom', 'Adresse','CodePostal', 'Ville', 'TelephoneFixe', 'TelephoneMobile', 'Mel', 'MotDePasse'];
+            foreach ($donneesAInserer as $cle => $valeur){
+                $session->set($cle, $valeur);
+            }
+
+            return redirect()->route('accueil');
+        }      
+    }
+
+    public function afficherLiaisons()
+    {
+        $modLiaison = new ModeleLiaison();
+        $data['liaisons'] = $modLiaison->getLiaisons();
+        $data['TitreDeLaPage'] = "Liste des liaisons";
+
+        return view('Templates/vue_Header', $data)
+            . view('Visiteur/vue_AfficherLiaisons')
+            . view('Templates/vue_Footer');
+    }
 }

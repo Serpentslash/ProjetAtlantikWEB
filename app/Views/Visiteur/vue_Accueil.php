@@ -1,2 +1,1 @@
 Le carrousel
-<script></script>

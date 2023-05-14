@@ -1,12 +1,11 @@
+<h1>Profil</h1>
 <?php
-    echo form_open('inscrire');
+    $session = session();
+    echo '<p>Nom: '.$session->get('Nom').'</p>';
+    echo '<p>Prenom: '.$session->get('Prenom').'</p>';
+
+    echo form_open('profil');
     echo csrf_field();
-
-    echo form_label('Entrez votre nom ','txtNom');
-    echo form_input('txtNom', set_value('txtNom'));
-
-    echo form_label('Entrez votre prénom ','txtPrenom');
-    echo form_input('txtPrenom', set_value('txtPrenom'));
 
     echo form_label('Entrez votre adresse ','txtAdresse');
     echo form_input('txtAdresse', set_value('txtAdresse'));
@@ -29,9 +28,7 @@
     echo form_label('Entrez votre mot de passe ','txtMotDePasse');
     echo form_password('txtMotDePasse','');
 
-    echo form_submit('btnInscrire','S\'inscire');
+    echo form_submit('btnModifier','Modifier');
     echo form_close();
-
-    echo"<a href=\"connecter\">Si vous avez déjà un compte: connectez-vous.</a>";
 
 ?>
