@@ -19,6 +19,13 @@ class ModeleTarifer extends Model
                     ->where('tarifer.NoLiaison', $NoLiaison)
                     ->where('periode.datefin >=', $date_now)
                     ->get()
-                    ->getResult();
+                    ->getResult();//->select('periode, distance, port_depart.nom as port_depart, port_arrivee.nom as port_arrivee, secteur.nom as secteur')
+
+        return $this->select('lettrecategorie, categorie.libelle as libelle_categorie, CONCAT(LettreCategorie, NoType, \' - \', type.libelle) as type, datedebut, datefin ,tarif')
+                    ->join('categorie', 'categorie.LettreCategorie = tarifer.LettreCategorie')
+                    ->join('type', 'type.LettreCategorie = tarifer.LettreCategorie AND type.NoType = tarifer.NoType')
+                    ->join('periode', 'periode.noperiode = tarifer.noperiode')
+                    ->get()
+                    ->getResultArray();
     }
 }

@@ -19,4 +19,15 @@ class ModeleLiaison extends Model
                     ->get()
                     ->getResultArray();
     }
+
+    public function getLiaison($NoLiaison)
+    {
+        return $this->select('noliaison, distance, port_depart.nom as port_depart, port_arrivee.nom as port_arrivee, secteur.nom as secteur')
+                    ->join('port as port_depart', 'port_depart.noport = liaison.noport_depart')
+                    ->join('port as port_arrivee', 'port_arrivee.noport = liaison.noport_arrivee')
+                    ->join('secteur', 'secteur.nosecteur = liaison.nosecteur')
+                    ->where('liaison.NoLiaison', $NoLiaison)
+                    ->get()
+                    ->getRowArray();
+    }
 }

@@ -264,6 +264,9 @@ class Visiteur extends BaseController{
             return redirect()->route('afficher_liaisons');
         }
 
+        $modLiaison = new ModeleLiaison();
+        $data['liaison'] = $modLiaison->getLiaison($noliaison);
+
         $modTarifer = new ModeleTarifer();
         $data['tarifs'] = $modTarifer->getTarifsParLiaison($noliaison);
         $data['TitreDeLaPage'] = "Liste des tarifs";
