@@ -2,6 +2,7 @@
 namespace App\Controllers;
 use App\Models\ModeleClient;
 use App\Models\ModeleLiaison;
+use App\Models\ModeleTarifer;
 
 helper(['url', 'assets', 'form']);
 
@@ -256,8 +257,15 @@ class Visiteur extends BaseController{
 
     public function afficherTarifs()
     {
-        $modTarif = new ModeleTarifs();
-        $data['tarifs'] = $modTarif->getTarifs();
+        if (isset($_GET['noliaison'])) {
+            $noliaison = $_GET['noliaison'];
+            
+        } else {
+            return redirect()->route('afficher_liaisons');
+        }
+
+        $modTarifer = new ModeleTarifer();
+        $data['tarifs'] = $modTarifer->getTarifsParLiaison($noliaison);
         $data['TitreDeLaPage'] = "Liste des tarifs";
 
         return view('Templates/vue_Header', $data)
