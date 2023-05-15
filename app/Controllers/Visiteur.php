@@ -265,14 +265,23 @@ class Visiteur extends BaseController{
         }
 
         $modLiaison = new ModeleLiaison();
-        $data['liaison'] = $modLiaison->getLiaison($noliaison);
+        $liaisonRetourne = $modLiaison->getLiaison($noliaison);
 
-        $modTarifer = new ModeleTarifer();
-        $data['tarifs'] = $modTarifer->getTarifsParLiaison($noliaison);
-        $data['TitreDeLaPage'] = "Liste des tarifs";
+        if ($liaisonRetourne != null) {
+            $modLiaison = new ModeleLiaison();
+            $data['liaison'] = $modLiaison->getLiaison($noliaison);
 
-        return view('Templates/vue_Header', $data)
-            . view('Visiteur/vue_AfficherTarifs')
-            . view('Templates/vue_Footer');
+            $modTarifer = new ModeleTarifer();
+            $data['tarifs'] = $modTarifer->getTarifsParLiaison($noliaison);
+            $data['TitreDeLaPage'] = "Liste des tarifs";
+
+            return view('Templates/vue_Header', $data)
+                . view('Visiteur/vue_AfficherTarifs')
+                . view('Templates/vue_Footer');
+        } else {
+            return redirect()->route('afficher_liaisons');
+        }
+
+        
     }
 }
