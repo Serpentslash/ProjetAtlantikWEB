@@ -16,6 +16,7 @@ class ModeleTarifer extends Model
                     ->join('periode', 'periode.noperiode = tarifer.noperiode')
                     ->orderBy('tarifer.lettrecategorie', 'ASC')
                     ->orderBy('type', 'ASC')
+                    ->where('tarifer.NoLiaison =', $NoLiaison)
                     //->where('periode.datefin >=', $date_now)
                     ->get()
                     ->getResultArray();
